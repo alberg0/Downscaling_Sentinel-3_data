@@ -238,6 +238,7 @@ NDVI_hist_base <- ggplot(data = ndvi_df) +
 # Combine the plots
 grid.arrange(LST_hist_base, NDVI_hist_base, ncol = 2)
 ```
+![](Downscaling_Sentinel-3_data/figure/unnamed-chunk-3-1.png.png)
 
 ```
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
@@ -293,7 +294,7 @@ grid.arrange(lst_plot, ndvi_plot, ncol = 2)
 ## (`geom_raster()`).
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png)
+![plot of chunk unnamed-chunk-4](figure/first_plot_pretty.png)
 
 ```r
 # From a visual inspection, we can hypothesize that colder values are located where the NDVI is lower (bottom-right of the area), while warmer pixels correspond to greener zones (top-left).
@@ -668,7 +669,7 @@ grid.arrange(lst_plot, filtered_plot, ncol = 2)
 ## (`geom_raster()`).
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png)
+![plot of chunk unnamed-chunk-14](figure/final_plot_pretty.png)
 
 ```r
 # t-testing the mean of predicted and original values
