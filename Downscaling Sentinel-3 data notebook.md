@@ -3,8 +3,8 @@ title: "Downscaling Sentinel-3 data"
 output: html_notebook
 ---
 
-```{r}
 
+```r
 library(gridExtra)
 library(raster)
 library(terra)
@@ -16,9 +16,9 @@ library(parallel)
 library(lattice)
 library(devtools)
 library(scales)
-
 ```
-```{r}
+
+```r
 # Importing the data ------------------------------------------------------
 
 # setwd("~/albergo_progettoGIS/albergo_Input_data+metadata") # <- insert data folder path here
@@ -46,11 +46,49 @@ names(lst_df) <- c("x", "y", "LST")
 
 # Print some statistics about the rasters:
 print("LST raster")
+```
+
+```
+## [1] "LST raster"
+```
+
+```r
 print(lst_raster)
+```
 
+```
+## class      : RasterLayer 
+## dimensions : 29, 38, 1102  (nrow, ncol, ncell)
+## resolution : 1136.877, 1136.877  (x, y)
+## extent     : 765693.3, 808894.6, 5049966, 5082935  (xmin, xmax, ymin, ymax)
+## crs        : +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs 
+## source     : LST_20220108_marina.tif 
+## names      : LST_20220108_marina
+```
+
+```r
 print("NDVI raster:")
-print(ndvi_raster)
+```
 
+```
+## [1] "NDVI raster:"
+```
+
+```r
+print(ndvi_raster)
+```
+
+```
+## class      : RasterLayer 
+## dimensions : 1714, 2193, 3758802  (nrow, ncol, ncell)
+## resolution : 20, 20  (x, y)
+## extent     : 765600, 809460, 5049160, 5083440  (xmin, xmax, ymin, ymax)
+## crs        : +proj=utm +zone=32 +datum=WGS84 +units=m +no_defs 
+## source     : NDVI_20220108_marina.tif 
+## names      : NDVI_20220108_marina
+```
+
+```r
 # LST stats
 lst_min <- min(lst_raster[], na.rm=TRUE)
 lst_max <- max(lst_raster[], na.rm=TRUE)
@@ -59,13 +97,62 @@ lst_median <- median(lst_raster[], na.rm=TRUE)
 lst_sd <- sd(lst_raster[], na.rm=TRUE)
 
 print(c("lst raster min: ", as.character(round(lst_min,2))))
-print(c("lst raster max: ", as.character(round(lst_max,2))))
-print(c("lst raster mean: ", as.character(round(lst_mean,2))))
-print(c("lst raster median: ", as.character(round(lst_median,2))))
-print(c("lst raster sd: ", as.character(round(lst_sd,2))))
-print("quantiles: ")
-print(round(quantile(lst_raster[], c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE),2))
+```
 
+```
+## [1] "lst raster min: " "274.57"
+```
+
+```r
+print(c("lst raster max: ", as.character(round(lst_max,2))))
+```
+
+```
+## [1] "lst raster max: " "277.56"
+```
+
+```r
+print(c("lst raster mean: ", as.character(round(lst_mean,2))))
+```
+
+```
+## [1] "lst raster mean: " "275.84"
+```
+
+```r
+print(c("lst raster median: ", as.character(round(lst_median,2))))
+```
+
+```
+## [1] "lst raster median: " "275.85"
+```
+
+```r
+print(c("lst raster sd: ", as.character(round(lst_sd,2))))
+```
+
+```
+## [1] "lst raster sd: " "0.43"
+```
+
+```r
+print("quantiles: ")
+```
+
+```
+## [1] "quantiles: "
+```
+
+```r
+print(round(quantile(lst_raster[], c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE),2))
+```
+
+```
+##     5%    25%    50%    75%    95% 
+## 275.13 275.56 275.85 276.15 276.49
+```
+
+```r
 LST_hist_base <- ggplot(data = lst_df) +
   geom_histogram(aes(x = LST), fill = "cadetblue3", color = "white") + 
   labs(title = "Frequency Histogram of LST", 
@@ -83,13 +170,62 @@ ndvi_median <- median(ndvi_raster[], na.rm=TRUE)
 ndvi_sd <- sd(ndvi_raster[], na.rm=TRUE)
 
 print(c("ndvi raster min: ", as.character(round(ndvi_min,2))))
-print(c("ndvi raster max: ", as.character(round(ndvi_max,2))))
-print(c("ndvi raster mean: ", as.character(round(ndvi_mean,2))))
-print(c("ndvi raster median: ", as.character(round(ndvi_median,2))))
-print(c("ndvi raster sd: ", as.character(round(ndvi_sd,2))))
-print("quantiles: ")
-print(round(quantile(ndvi_raster[], c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE),2))
+```
 
+```
+## [1] "ndvi raster min: " "-1"
+```
+
+```r
+print(c("ndvi raster max: ", as.character(round(ndvi_max,2))))
+```
+
+```
+## [1] "ndvi raster max: " "1"
+```
+
+```r
+print(c("ndvi raster mean: ", as.character(round(ndvi_mean,2))))
+```
+
+```
+## [1] "ndvi raster mean: " "0.42"
+```
+
+```r
+print(c("ndvi raster median: ", as.character(round(ndvi_median,2))))
+```
+
+```
+## [1] "ndvi raster median: " "0.44"
+```
+
+```r
+print(c("ndvi raster sd: ", as.character(round(ndvi_sd,2))))
+```
+
+```
+## [1] "ndvi raster sd: " "0.24"
+```
+
+```r
+print("quantiles: ")
+```
+
+```
+## [1] "quantiles: "
+```
+
+```r
+print(round(quantile(ndvi_raster[], c(0.05, 0.25, 0.5, 0.75, 0.95), na.rm=TRUE),2))
+```
+
+```
+##   5%  25%  50%  75%  95% 
+## 0.13 0.24 0.44 0.60 0.77
+```
+
+```r
 NDVI_hist_base <- ggplot(data = ndvi_df) +
   geom_histogram(aes(x = NDVI_20220108_marina), fill = "seagreen2", color = "white") + 
   labs(title = "Frequency Histogram of NDVI", 
@@ -97,13 +233,34 @@ NDVI_hist_base <- ggplot(data = ndvi_df) +
        y = "") +
   theme_minimal()
 ```
-```{r}
+
+```r
 # Combine the plots
 grid.arrange(LST_hist_base, NDVI_hist_base, ncol = 2)
 ```
+![](Downscaling_Sentinel-3_data/figure/unnamed-chunk-3-1.png.png)
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## Warning: Removed 403 rows containing non-finite outside the scale range (`stat_bin()`).
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## Warning: Removed 1478683 rows containing non-finite outside the scale range (`stat_bin()`).
+```
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png)
 
 
-```{r}
+
+```r
 # Rasters visualization 
 
 #Removing non positive NDVI values to improve the visualization
@@ -131,7 +288,15 @@ lst_plot <- ggplot() +
 # Combine the plots
 grid.arrange(lst_plot, ndvi_plot, ncol = 2)
 ```
-```{r}
+
+```
+## Warning: Removed 403 rows containing missing values or values outside the scale range
+## (`geom_raster()`).
+```
+
+![plot of chunk unnamed-chunk-4](figure/first_plot_pretty.png)
+
+```r
 # From a visual inspection, we can hypothesize that colder values are located where the NDVI is lower (bottom-right of the area), while warmer pixels correspond to greener zones (top-left).
 
 
@@ -161,7 +326,10 @@ plot_vgm_135 <- plot(vgm_135, main = "LST Variogram (135º rotation)")
 
 grid.arrange(plot_vgm_0, plot_vgm_45, plot_vgm_90, plot_vgm_135, nrow = 2, ncol = 2)
 ```
-```{r}
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+
+```r
 # Fit theoretic variogram for the LST 
 
 fitted_vgm_lst <- fit.variogram(vgm_0, vgm(psill = 0.03, model = "Sph", range = 15000, add.to=vgm(psill=0.065, model="Sph", range=5000, nugget=0.055)))
@@ -220,9 +388,11 @@ plot_vgm_90_ndvi <- plot(vgm_90_ndvi, main = "ndvi Variogram (90º rotation)")
 plot_vgm_135_ndvi <- plot(vgm_135_ndvi, main = "ndvi Variogram (135º rotation)")
 
 grid.arrange(plot_vgm_0_ndvi, plot_vgm_45_ndvi, plot_vgm_90_ndvi, plot_vgm_135_ndvi, nrow = 2, ncol = 2)
-
 ```
-```{r}
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png)
+
+```r
 # Fitting the theoretical variogram for the NDVI
 fitted_vgm_ndvi <- fit.variogram(vgm_0_ndvi, vgm(nugget = 0.03, psill = 0.005, model = "Sph", range = 5000))
 
@@ -234,9 +404,12 @@ vario_plot_ndvi <- plot(vgm_0_ndvi, fitted_vgm_ndvi, main = "Fitted variogram mo
 grid.arrange(vario_plot_lst, vario_plot_ndvi, ncol = 2)
 ```
 
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7-1.png)
 
 
-```{r}
+
+
+```r
 # detrending --------------------------------------------------------------
 
 
@@ -261,14 +434,18 @@ detrended_colors <- colors[as.numeric(cut(ndvi_spdf@data$detrended, breaks = 100
 # Plot detrended values
 plot(ndvi_spdf@coords, col = detrended_colors, main = "Detrended NDVI Data", pch = 20)
 ```
-```{r}
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8-1.png)
+
+```r
 # Hist of detrended values
 detrended_hist_ndvi <- ggplot(data = ndvi_spdf@data, aes(x = detrended)) +
   geom_histogram( fill = "seagreen2", color = "white") +
   labs(title = "Detrended NDVI data", x = "Detrended values", y = "Frequency") +
   theme_minimal()
 ```
-```{r}
+
+```r
 # LST
 
 # Adapting a linear regression to isolate the trend
@@ -290,7 +467,10 @@ detrended_colors <- colors[as.numeric(cut(lst_spdf@data$detrended, breaks = 100,
 # Plot detrended values
 plot(lst_spdf@coords, col = detrended_colors, main = "LST Detrended Data", pch = 20)
 ```
-```{r}
+
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png)
+
+```r
 # Hist of detrended values
 detrended_hist_lst <- ggplot(data = lst_spdf@data, aes(x = detrended)) +
   geom_histogram(fill = "cadetblue3", color = "white") +
@@ -301,6 +481,13 @@ detrended_hist_lst <- ggplot(data = lst_spdf@data, aes(x = detrended)) +
 # plotting both histograms together
 grid.arrange(detrended_hist_lst, detrended_hist_ndvi, ncol = 2)
 ```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png)
 ```
 # renaming the columns
 names(ndvi_spdf@data) <- c("NDVI_20220108", "detrended_ndvi")
@@ -385,7 +572,8 @@ combined_discrete_areas <- list("LST" = lst_spatraster.discreteArea, "NDVI" = nd
 # Deconvolution of the Cross variogram of LST and NDVI
 deconv_crossvgm <- atakrig::deconvPointVgmForCoKriging(combined_discrete_areas, fig = TRUE,  model = "Sph")
 ```
-```{r}
+
+```r
 # !!!!!!!!!
 # SKIPPING THE MODELLING PART FOR REPORTING PURPOSES. 
 # FOR FUTURE APPLICATIONS, PLESE UNCOMMENT THE NEXT LINES
@@ -415,9 +603,9 @@ load("Downscaling_S3_final.RData")
 
 # Inverse transformation to get LST
 predicted$lst <- trend_model_lst$coefficients[1] + trend_model_lst$coefficients[2] * predicted$centx + trend_model_lst$coefficients[3] * predicted$centy + (predicted$pred * sd_lst_spatraster + mu_lst_spatraster)
-
 ```
-```{r}
+
+```r
 # Validation --------------------------------------------------------------
 
 # Defining anomalous predictions 
@@ -445,7 +633,26 @@ predicted_hist <- ggplot(data = filtered) +
 
 grid.arrange(LST_hist_base, predicted_hist, ncol = 2)
 ```
-```{r}
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## Warning: Removed 403 rows containing non-finite outside the scale range (`stat_bin()`).
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## Warning: Removed 849 rows containing non-finite outside the scale range (`stat_bin()`).
+```
+
+![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13-1.png)
+
+```r
 filtered_plot <- ggplot() +
   geom_tile(data = filtered, aes(x = x, y = y, fill = LST)) +
   scale_fill_gradientn(
@@ -456,11 +663,45 @@ filtered_plot <- ggplot() +
 
 grid.arrange(lst_plot, filtered_plot, ncol = 2)
 ```
-```{r}
+
+```
+## Warning: Removed 403 rows containing missing values or values outside the scale range
+## (`geom_raster()`).
+```
+
+![plot of chunk unnamed-chunk-14](figure/final_plot_pretty.png)
+
+```r
 # t-testing the mean of predicted and original values
 t_test<- t.test(filtered$LST, lst_df$LST)
 print(t_test)
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  filtered$LST and lst_df$LST
+## t = -0.1743, df = 713.62, p-value = 0.8617
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.03501367  0.02930356
+## sample estimates:
+## mean of x mean of y 
+##  275.8408  275.8436
+```
+
+```r
 # Mann-Whitney U test for the distributions
 wilcox_test <- wilcox.test(lst_df$LST, filtered$LST)
 print(wilcox_test)
+```
+
+```
+## 
+## 	Wilcoxon rank sum test with continuity correction
+## 
+## data:  lst_df$LST and filtered$LST
+## W = 31938445, p-value = 0.9604
+## alternative hypothesis: true location shift is not equal to 0
 ```
